@@ -53,6 +53,7 @@
     </p>
 
     <div id="participantsDiv"></div>
+    <div>Say "OK Hangout"</div>
     <div id="okperson">OK, Person.</div>
 
     <hr>
