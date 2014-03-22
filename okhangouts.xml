@@ -97,6 +97,7 @@
     gadgets.util.registerOnLoadHandler(init);
     </script>
 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.1.0/annyang.min.js"></script>
     
     <script>
