@@ -34,6 +34,10 @@
             background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#333)); 
             background: -moz-linear-gradient(bottom, #ddd, #aaa); }
 
+    #okperson {
+      display:none;
+    }
+
     -->
     </style>
     <body>
@@ -49,6 +53,7 @@
     </p>
 
     <div id="participantsDiv"></div>
+    <div id="okperson">OK, Person.</div>
 
     <hr>
 
@@ -90,6 +95,24 @@
     // Wait for gadget to load.                                                       
     gadgets.util.registerOnLoadHandler(init);
     </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.1.0/annyang.min.js"></script>
+    
+    <script>
+      if (annyang) {
+        // Let's define a command.
+        var commands = {
+          'ok hangout': function() { $('#okperson').show(); }
+        };
+
+        // Add our commands to annyang
+        annyang.addCommands(commands);
+
+        // Start listening.
+        annyang.start();
+      }
+    </script>
+
     </body>
     ]]>
   </Content>
