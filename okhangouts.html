@@ -11,6 +11,9 @@
       #map-canvas {
         display:none;
       }
+      #calculator {
+        display:none;
+      }
     </style>
   </head>
   <body>
@@ -20,6 +23,7 @@
     <div>Say "OK Hangout"</div>
     <div id="okperson">OK, Human.</div>
     <div id="map-canvas" style="width:800px;height:500px;"></div>
+    <div id="calculator"></div>
     </div>
 
     <script>
@@ -52,6 +56,34 @@
       }
 
       google.maps.event.addDomListener(window, 'load', initialize);
+
+      function evaluate(expression) {
+        console.log("evaluate: " + expression);
+        var re = /^(\d+) (\-|X|divided by|\+|times|plus)\s?(\d+)$/;
+        var exArr = expression.match(re);
+        var operator;
+        switch(exArr[2]) {
+          case "X":
+            operator = "*";
+            break;
+          case "times":
+            operator = "*";
+            break;
+          case "divided by":
+            operator = "/";
+            break;
+          case "plus":
+            operator = "+";
+            break;
+          case "-":
+            operator = "-";
+            break;
+        }
+        var expression = exArr[1] + operator + exArr[3];
+        var answer = eval(expression);
+        $('#calculator').text(answer);
+        $('#calculator').fadeIn();
+      }
 
       if (annyang) {
         var showFlickr = function(tag) {
@@ -87,7 +119,8 @@
         var commands = {
           'ok hangout': function() { $('#okperson').show(); console.log('person!')},
           'show me *term': showFlickr,
-          'where is *term': locate
+          'where is *location': locate,
+          'calculate *expression': evaluate
         };
 
         // Add our commands to annyang
