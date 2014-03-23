@@ -8,12 +8,9 @@
     <script src="https://w.soundcloud.com/player/api.js"></script>
     <style type="text/css">
       html { height: 100% }
+      body { background: #e74c3c; color: white; font-size: 14pt; font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif; height: 100%; margin: 0; padding: 0; margin: 20px 50px;}
       #map-canvas {
         display:none;
-      }
-      body { background: #e74c3c; color: white; font-size: 14pt; font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif; height: 100%; margin: 0; padding: 0 }
-      #main {
-        margin: 20px 50px;
       }
       #container {
         margin-bottom: 30px;
@@ -27,6 +24,7 @@
         -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.05) inset;
         -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.05) inset;
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.05) inset;
+        margin-bottom: 10px;
       }
       h1 {
         display: inline-block;
@@ -39,17 +37,18 @@
         cursor: pointer;
       }
       footer {
+        position: relative;
+        bottom: 0;
         padding-top: 10px;
+        margin-bottom: 20px;
       }
     </style>
   </head>
   <body>
     <div id="main">
-
-      <h1>OK Hangout</h1> (<a onClick="toggleDescription()">?</a>)
+      <h1>OK Hangout</h1> (<a onClick="toggleDescription()">toggle help</a>)
       <div id="map-canvas" style="width:800px;height:500px;"></div>
       <div id="container"></div>
-      <h1>OK Hangout</h1> (<a onClick="toggleDescription()">toggle help</a>)
       <div id="description">
         <p>
           Use voice commands during a Google Hangout to share quick and seamless queries.
@@ -79,8 +78,8 @@
       </div>
       <div id="container"></div>
       <div id="map-canvas" style="width:800px;height:500px;"></div>
-      <footer>-----<br>Hacked by <a href="http://twitter.com/whatmariel">@whatmariel</a> and <a href="http://twitter.com/alexa_claire">@alexa_claire</a></div>
     </div>
+    <footer>-----<br>Hacked by <a href="http://twitter.com/whatmariel">@whatmariel</a> and <a href="http://twitter.com/alexa_claire">@alexa_claire</a>
     <script>
 
       var geocoder;
