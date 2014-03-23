@@ -18,11 +18,47 @@
     <div id="okperson">OK, Human.</div>
     <div id="map-canvas" style="width:800px;height:500px;"></div>
 
+
+    <div id="flickrLoader"><p></p></div>
+    <div id="flickrGallery" class="hidden"></div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.1.0/annyang.min.js"></script>
     <script>
       if (annyang) {
+      var showFlickr = function(tag) {
+          console.log('flicka');
+          $('#flickrGallery').show();
+          $('#flickrLoader p').text('Searching for '+tag).fadeIn('fast');
+          var url = '//api.flickr.com/services/rest/?method=flickr.photos.search&api_key=a828a6571bb4f0ff8890f7a386d61975&sort=interestingness-desc&per_page=9&format=json&callback=jsonFlickrApi&tags='+tag;
+          $.ajax({
+            type: 'GET',
+            url: url,
+            async: false,
+            jsonpCallback: 'jsonFlickrApi',
+            contentType: "application/json",
+            dataType: 'jsonp'
+          });
+          scrollTo("#section_image_search");
+        };
+
+        var jsonFlickrApi = function(results) {
+          $("flickrGallery").empty();
+          $('#flickrLoader p').fadeOut('slow');
+          var photos = results.photos.photo;
+          $('flickrGallery').empty();
+          $.each(photos, function(index, photo) {
+            $(document.createElement("img"))
+              .attr({ src: '//farm'+photo.farm+'.staticflickr.com/'+photo.server+'/'+photo.id+'_'+photo.secret+'_s.jpg' })
+              .addClass("flickrGallery")
+              .appendTo(flickrGallery);
+          });
+        };
+
         // Let's define a command.
         var commands = {
-          'ok hangout': function() { $('#okperson').show(); }
+          'ok hangout': function() { $('#okperson').show(); console.log('person!')},
+          'show me *term': showFlickr
         };
 
         // Add our commands to annyang
