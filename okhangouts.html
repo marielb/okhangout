@@ -92,11 +92,23 @@
           tutorial = false;
         };
 
+        var watch = function(query) {
+          $("#container").empty();
+          $("#container").append('<iframe id="ytplayer" type="text/html" width="640" height="360" src="https://www.youtube.com/embed/?listType=search&autoplay=1&list=' + query + '" frameborder="0" allowfullscreen>');
+        }
+
+        var wolfram = function(query) {
+          $("#container").empty();
+          $.getJSON('http://api.wolframalpha.com/v2/query?input='+query+'&appid=GQVKAU-R5PVKR4H9E');
+        }
+
         // Let's define a command.
         var commands = {
           'ok hangout': okPerson, 
           'show me *term': showFlickr,
-          'where is *term': locate
+          'where is *term': locate,
+          'watch *term': watch,
+          'alpha *term': wolfram
         };
 
         // Add our commands to annyang
