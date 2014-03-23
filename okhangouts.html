@@ -64,6 +64,12 @@
           Listen [song]: Play a song using Soundcloud
           <br>
           Calculate [expression]: Supports multiplication, division, addition, subtraction
+          <br>
+          Define [word]: Show definition
+          <br>
+          Synonym for [word]: Show synonyms
+          <br>
+          Cook [word]: Display recipe
         </div>
       </div>
       <div id="map-canvas" style="width:800px;height:500px;"></div>
@@ -183,14 +189,59 @@
         var watch = function(query) {
           console.log("watch: " + query);
           $("#container").empty();
-          $("#container").append('<iframe id="ytplayer" type="text/html" width="640" height="360" src="https://www.youtube.com/embed/?listType=search&autoplay=1&list=' + query + '" frameborder="0" allowfullscreen>').fadeIn();
-        }
+          $("#container").append('<iframe id="ytplayer" type="text/html" width="640" height="360" src="https://www.youtube.com/embed/?listType=search&autoplay=1&list=' + query + '" frameborder="0" allowfullscreen></iframe><div id="playlist"></div>');
+        };
 
-        var wolfram = function(query) {
-          console.log("alpha: " + query);
+        var define = function(query) {
           $("#container").empty();
-          $.getJSON('http://api.wolframalpha.com/v2/query?input='+query+'&appid=GQVKAU-R5PVKR4H9E');
-        }
+          $.ajax({
+            url: 'https://api.pearson.com/v2/dictionaries/entries?headword=' + query + '&apikey=qfw3wC8nsZJhmF97mK2ywPmgZCpIxPBu', 
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+              var word = data['results'][0]['senses'][0];
+              $("#container").append("<div><strong>Definition:</strong> " + (word.definition !== undefined ? word.definition : '') + "</br></br><div><strong>Example: </strong> " + (word.examples[0].text !== undefined ? word.examples[0].text : '') + "</div>");
+                
+            }
+          });
+        };
+
+        var synonym = function(query) {
+          $("#container").empty();
+          $.ajax({
+            url: 'http://words.bighugelabs.com/api/2/38e36cde2d19f45d5a1e4e686f12b7d7/' + query + '/json',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+              for (key in data) {
+                var ary = data[key].syn;
+                for (word in ary) {
+                  $("#container").append(ary[word] + "</br>");
+                }
+              }
+            }
+          });
+        };
+
+        var recipe = function(query) {
+          $("#container").empty();
+          $.ajax({
+            url: 'https://api.pearson.com/v2/foodanddrink/recipes?search=' + query,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+              var recipe = data['results'][0];
+              if (recipe !== undefined) {
+                $("#container").append('<strong>Ingredients:</strong></br>');
+                var ingredients = recipe.ingredients;
+                for (i in ingredients) {
+                  $("#container").append(ingredients[i].description + '</br>');
+                }
+                $("#container").append('</br></br><strong>Directions: </strong></br>' + recipe.directions.join('</br>'))
+              }
+            }
+          });
+        };
 
         SC.initialize({
           client_id: '42a4426020b57d83c51a76d65856cca8'
@@ -229,6 +280,9 @@
           'calculate *expression': evaluate,
           'watch *term': watch,
           'listen *query': soundcloud
+          'define *term': define,
+          'synonym for *term': synonym,
+          'cook *term': recipe
         };
 
         // Add our commands to annyang
