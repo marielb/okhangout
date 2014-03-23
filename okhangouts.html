@@ -42,6 +42,8 @@
       }
 
       function locate(location) {
+        console.log("locate: " + location);
+        $("#map-canvas").fadeIn();
         geocoder.geocode( { 'address': location}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location);
@@ -59,7 +61,7 @@
 
       function evaluate(expression) {
         console.log("evaluate: " + expression);
-        var re = /^(\d+) (\-|X|divided by|\+|times|plus)\s?(\d+)$/;
+        var re = /^(\d+) (\-|X|divided by|\+|times|plus|minus)\s?(\d+)$/;
         var exArr = expression.match(re);
         var operator;
         switch(exArr[2]) {
@@ -78,9 +80,15 @@
           case "-":
             operator = "-";
             break;
+          case "minus":
+            operator = "-";
+            break;
         }
+        console.log("operator: " + operator);
         var expression = exArr[1] + operator + exArr[3];
         var answer = eval(expression);
+        console.log("expression: " + expression);
+        console.log("answer: " + answer);
         $('#calculator').text(answer);
         $('#calculator').fadeIn();
       }
