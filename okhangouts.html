@@ -8,10 +8,10 @@
     <script src="https://w.soundcloud.com/player/api.js"></script>
     <style type="text/css">
       html { height: 100% }
-      body { background: #e74c3c; color: white; font-size: 14pt; font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif; height: 100%; margin: 0; padding: 0 }
       #map-canvas {
         display:none;
       }
+      body { background: #e74c3c; color: white; font-size: 14pt; font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif; height: 100%; margin: 0; padding: 0 }
       #main {
         margin: 20px 50px;
       }
@@ -44,6 +44,7 @@
   <body>
     <div id="main">
       <h1>OK Hangout</h1> (<a onClick="toggleDescription()">?</a>)
+      <div id="map-canvas" style="width:800px;height:500px;"></div>
       <div id="container"></div>
       <div id="description">
         <p>
@@ -72,7 +73,6 @@
           Cook [word]: Display recipe
         </div>
       </div>
-      <div id="map-canvas" style="width:800px;height:500px;"></div>
       <footer>-----<br>Hacked by <a href="http://twitter.com/whatmariel">@whatmariel</a> and <a href="http://twitter.com/alexa_claire">@alexa_claire</a></div>
     </div>
     <script>
@@ -189,11 +189,13 @@
         var watch = function(query) {
           console.log("watch: " + query);
           $("#container").empty();
+          $("#map-canvas").hide();
           $("#container").append('<iframe id="ytplayer" type="text/html" width="640" height="360" src="https://www.youtube.com/embed/?listType=search&autoplay=1&list=' + query + '" frameborder="0" allowfullscreen></iframe><div id="playlist"></div>');
         };
 
         var define = function(query) {
           $("#container").empty();
+          $("#map-canvas").hide();
           $.ajax({
             url: 'https://api.pearson.com/v2/dictionaries/entries?headword=' + query + '&apikey=qfw3wC8nsZJhmF97mK2ywPmgZCpIxPBu', 
             type: 'GET',
@@ -208,6 +210,7 @@
 
         var synonym = function(query) {
           $("#container").empty();
+          $("#map-canvas").hide();
           $.ajax({
             url: 'http://words.bighugelabs.com/api/2/38e36cde2d19f45d5a1e4e686f12b7d7/' + query + '/json',
             type: 'GET',
@@ -225,6 +228,7 @@
 
         var recipe = function(query) {
           $("#container").empty();
+          $("#map-canvas").hide();
           $.ajax({
             url: 'https://api.pearson.com/v2/foodanddrink/recipes?search=' + query,
             type: 'GET',
@@ -256,6 +260,7 @@
         function soundcloud(query) {
           console.log("soundcloud: " + query);
           $("#container").empty();
+          $("#map-canvas").hide();
           var track_url;
           SC.get('/tracks', { q: query }, function(tracks) {
             console.log(tracks[0]);
@@ -279,7 +284,7 @@
           'where is *location': locate,
           'calculate *expression': evaluate,
           'watch *term': watch,
-          'listen *query': soundcloud
+          'listen *query': soundcloud,
           'define *term': define,
           'synonym for *term': synonym,
           'cook *term': recipe
@@ -290,6 +295,8 @@
 
         // Start listening.
         annyang.start();
+
+        recipe('chicken');
       }
     </script>
 
