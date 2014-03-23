@@ -47,6 +47,8 @@
   <body>
     <div id="main">
       <h1>OK Hangout</h1> (<a onClick="toggleDescription()">toggle help</a>)
+      <div id="map-canvas" style="width:800px;height:500px;"></div>
+      <div id="container"></div>
       <div id="description">
         <p>
           Use voice commands during a Google Hangout to share quick and seamless queries.
@@ -198,7 +200,6 @@
         var define = function(query) {
           clear();
           console.log("define: " + query);
-          
           $.ajax({
             url: 'https://api.pearson.com/v2/dictionaries/entries?headword=' + query + '&apikey=qfw3wC8nsZJhmF97mK2ywPmgZCpIxPBu', 
             type: 'GET',
