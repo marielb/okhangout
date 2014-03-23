@@ -29,6 +29,11 @@
       h1 {
         display: inline-block;
       }
+      h2 {
+        font-size: 50px;
+        margin-bottom: -10px;
+        font-weight: lighter;
+      }
       a {
         color: #f1c40f;
         font-weight: bold;
@@ -47,8 +52,8 @@
   <body>
     <div id="main">
       <h1>OK Hangout</h1> (<a onClick="toggleDescription()">toggle help</a>)
-      <div id="map-canvas" style="width:800px;height:500px;"></div>
       <div id="container"></div>
+      <div id="map-canvas" style="width:800px;height:500px;"></div>
       <div id="description">
         <p>
           Use voice commands during a Google Hangout to share quick and seamless queries.
@@ -110,6 +115,7 @@
         clear();
         console.log("locate: " + location);
         $("#map-canvas").fadeIn();
+        $("#container").append("<h2>" + location + "<h2>");
         geocoder.geocode( { 'address': location}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location);
@@ -292,7 +298,7 @@
           'synonym for *term': synonym,
           'cook *term': recipe
         };
-
+        locate('Florida');
         // Add our commands to annyang
         annyang.addCommands(commands);
 
