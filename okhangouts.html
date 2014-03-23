@@ -15,12 +15,14 @@
       #main {
         margin: 20px 50px;
       }
+      #container {
+        margin-bottom: 30px;
+      }
       .code {
         font-family: monospace;
         color: #666;
         border: 1px solid #ddd;
         padding: 10px;
-        margin-bottom: 30px;
         background: #fff;
         -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.05) inset;
         -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.05) inset;
@@ -43,8 +45,7 @@
   </head>
   <body>
     <div id="main">
-      <h1>OK Hangout</h1> (<a onClick="toggleDescription()">?</a>)
-      <div id="container"></div>
+      <h1>OK Hangout</h1> (<a onClick="toggleDescription()">toggle help</a>)
       <div id="description">
         <p>
           Use voice commands during a Google Hangout to share quick and seamless queries.
@@ -72,6 +73,7 @@
           Cook [word]: Display recipe
         </div>
       </div>
+      <div id="container"></div>
       <div id="map-canvas" style="width:800px;height:500px;"></div>
       <footer>-----<br>Hacked by <a href="http://twitter.com/whatmariel">@whatmariel</a> and <a href="http://twitter.com/alexa_claire">@alexa_claire</a></div>
     </div>
@@ -95,9 +97,15 @@
             mapOptions);
       }
 
-      function locate(location) {
-        console.log("locate: " + location);
+      function clear() {
+        $("#description").hide();
+        $("#map-canvas").hide();
         $("#container").empty();
+      }
+
+      function locate(location) {
+        clear();
+        console.log("locate: " + location);
         $("#map-canvas").fadeIn();
         geocoder.geocode( { 'address': location}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
@@ -116,8 +124,8 @@
       google.maps.event.addDomListener(window, 'load', initialize);
 
       function evaluate(expression) {
+        clear();
         console.log("evaluate: " + expression);
-        $("#container").empty();
         var re = /^(\d+) (\-|X|divided by|\+|times|plus|minus)\s?(\d+)$/;
         var exArr = expression.match(re);
         var operator;
@@ -143,13 +151,12 @@
         }
         var expression = exArr[1] + operator + exArr[3];
         var answer = eval(expression);
-        $("#container").append("<div id='calculator'>" + answer + "</div>").fadeIn();
+        $("#container").append("<div id='calculator'>Calculate '" + expression + "' :  " + answer + "</div>").fadeIn();
       }
 
       if (annyang) {
         var showFlickr = function(tag) {
-          $("#map-canvas").hide();
-          $("#container").empty();
+          clear();
           $("#container").append("<div id='flickrLoader'><p></p></div><div id='flickrGallery'></div>")
           $('#flickrLoader p').text('Searching for '+tag).fadeIn('fast');
           var url = '//api.flickr.com/services/rest/?method=flickr.photos.search&api_key=a828a6571bb4f0ff8890f7a386d61975&sort=interestingness-desc&per_page=9&format=json&callback=jsonFlickrApi&tags='+tag;
@@ -177,23 +184,20 @@
 
         var okPerson = function() {
           console.log("OK, Human");
-          $("#container").empty();
-          $("#map-canvas").hide();
-          if (!tutorial) {
-            $("#container").empty();
-          } 
+          clear();
           $("#container").append("<div id='okperson'>OK, Human.</div>").fadeIn();
-          tutorial = false;
         };
 
         var watch = function(query) {
+          clear();
           console.log("watch: " + query);
-          $("#container").empty();
           $("#container").append('<iframe id="ytplayer" type="text/html" width="640" height="360" src="https://www.youtube.com/embed/?listType=search&autoplay=1&list=' + query + '" frameborder="0" allowfullscreen></iframe><div id="playlist"></div>');
         };
 
         var define = function(query) {
-          $("#container").empty();
+          clear();
+          console.log("define: " + query);
+          
           $.ajax({
             url: 'https://api.pearson.com/v2/dictionaries/entries?headword=' + query + '&apikey=qfw3wC8nsZJhmF97mK2ywPmgZCpIxPBu', 
             type: 'GET',
@@ -207,7 +211,8 @@
         };
 
         var synonym = function(query) {
-          $("#container").empty();
+          clear();
+          console.log("synonym: " + query);
           $.ajax({
             url: 'http://words.bighugelabs.com/api/2/38e36cde2d19f45d5a1e4e686f12b7d7/' + query + '/json',
             type: 'GET',
@@ -224,7 +229,8 @@
         };
 
         var recipe = function(query) {
-          $("#container").empty();
+          clear();
+          console.log("recipe: " + query);
           $.ajax({
             url: 'https://api.pearson.com/v2/foodanddrink/recipes?search=' + query,
             type: 'GET',
@@ -254,8 +260,8 @@
         }
 
         function soundcloud(query) {
+          clear();
           console.log("soundcloud: " + query);
-          $("#container").empty();
           var track_url;
           SC.get('/tracks', { q: query }, function(tracks) {
             console.log(tracks[0]);
@@ -279,7 +285,7 @@
           'where is *location': locate,
           'calculate *expression': evaluate,
           'watch *term': watch,
-          'listen *query': soundcloud
+          'listen *query': soundcloud,
           'define *term': define,
           'synonym for *term': synonym,
           'cook *term': recipe
